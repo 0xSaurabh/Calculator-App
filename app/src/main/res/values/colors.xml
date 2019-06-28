@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#2186F3</color>
-    <color name="colorPrimaryDark">#0057b5</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimaryDark">#ffffff</color>
+    <color name="colorAccent">#005ac0</color>
     <color name="background">#ffffff</color>
     <color name="rippleEffect">#a8abaf</color>
     <color name="textColor">#6A6C6D</color>
