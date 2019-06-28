@@ -3,6 +3,7 @@ package com.limelight.calculator;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,20 +33,25 @@ public class MainActivity extends AppCompatActivity {
     private Button equalsButton;
     private String newText;
     private TextView displayAnswer;
+
     private int numberOfDecimals = 0;
+    private int expressionArrayLength = 0;
+
     private ArrayList<Boolean> decimalUsed = new ArrayList<>();
     private ArrayList<String> expressionArray = new ArrayList<>();
     private ArrayList<String> stack = new ArrayList<>();
     private ArrayList<Character> operatorStack = new ArrayList<>();
-    private int expressionArrayLength = 0;
+    private ArrayList<Double> solveStack = new ArrayList<>();
+
     private char lastCharacter;
     private Vibrator hapticFeedback;
-    private ArrayList<Double> solveStack = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 
         initializeViewObjects();
         setUpOnClickListeners();
@@ -54,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         displayExpression.setShowSoftInputOnFocus(false);
     }
 
+
+    //Initialize all the view objects
     public void initializeViewObjects(){
         //Points various view subtypes to their objects
         displayExpression = findViewById(R.id.displayExpression);
@@ -79,7 +87,9 @@ public class MainActivity extends AppCompatActivity {
         hapticFeedback = (Vibrator)this.getSystemService(VIBRATOR_SERVICE);
     }
 
+    //Sets up OnClickListeners for buttons
     public void setUpOnClickListeners(){
+
         //On Click Listener for Number Buttons and Dot Button
         View.OnClickListener numberListener = new View.OnClickListener() {
             //Overrides onClick method
@@ -87,11 +97,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Button numButton = (Button)v;
                 newText = displayExpression.getText().toString();
-
-                if(expressionArray.isEmpty()) {
-                    expressionArrayLength = 0;
-                    expressionArray.add(expressionArrayLength, "");
-                }
 
                 if(newText.length()>0)
                     lastCharacter = newText.charAt(newText.length() - 1); //gets last character from displayExpression
@@ -101,12 +106,12 @@ public class MainActivity extends AppCompatActivity {
                         return;
                     else if ((operatorCheck(lastCharacter) || newText.length() < 1)) {
                         displayExpression.append("0");
-                        addToArray("0");
+                        //addToArray("0");
                     }
                 }
 
                 String number = numButton.getText().toString(); //Gets text from button
-                addToArray(number);
+                //addToArray(number);
                 displayExpression.append(number);//Adds the number to the displayExpression Text.
                 if(numButton.getId() == R.id.buttonDot)
                     decimalUsed.add(numberOfDecimals,true);
@@ -126,8 +131,10 @@ public class MainActivity extends AppCompatActivity {
                 //checks if the length of string is greater than zero
                 if(newText.length() > 0) {
                     lastCharacter = newText.charAt(newText.length() - 1); //gets last character from displayExpression
-                    //CHeck's if the button pressed is Clear Button
+                    //Check's if the button pressed is Clear Button
                     if (operator.getId() == R.id.buttonClear) {
+                        //if(expressionArray.isEmpty())
+                            //convertToArrayList();
                         newText = newText.substring(0, newText.length() - 1); //creates a new sub-string
                         displayExpression.setText(newText); //sets text
                         if(operatorCheck(lastCharacter)) {
@@ -136,7 +143,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                         if(lastCharacter == '.')
                             decimalUsed.set(numberOfDecimals,false);
-                        popElement();
                     }
                     //Adds Operators to strings
                     else {
@@ -148,11 +154,11 @@ public class MainActivity extends AppCompatActivity {
                         } else{
                             if(lastCharacter == '.') {
                                 displayExpression.append("0");
-                                addToArray("0");
+                                //addToArray("0");
                             }
                             displayExpression.append(operators); //Adds the operator by appending text
                         }
-                        addToArray(operators);
+                        //addToArray(operators);
                         numberOfDecimals++; //increments number of decimals that can be added.
                         decimalUsed.add(numberOfDecimals,false);
                     }
@@ -162,23 +168,27 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        //Long Press OnClickListener for clear button
         View.OnLongClickListener clearButtonLongPress = new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                displayExpression.setText("");
-                decimalUsed.clear();
-                numberOfDecimals = 0;
-                decimalUsed.add(numberOfDecimals,false);
-                hapticFeedback.vibrate(1);
-                displayAnswer.setText("");
-                clearStack();
+                convertToArrayList();
+                displayExpression.setText(""); //Clears the mathematical expression
+                decimalUsed.clear(); //Clears the decimal array
+                numberOfDecimals = 0; //sets number of decimals used to 0
+                decimalUsed.add(numberOfDecimals,false); // initializes the Decimal Used ArrayList
+                hapticFeedback.vibrate(1); //Gives Haptic feedback on Long Press
+                displayAnswer.setText(""); //Resets displayAnswer TextView
+                clearStack(); // Clears the stack
                 return false;
             }
         };
 
+        //Equal Button OnClickListener
         View.OnClickListener equalsListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                convertToArrayList();
                 convertToStack();
             }
         };
@@ -202,10 +212,12 @@ public class MainActivity extends AppCompatActivity {
         buttonMinus.setOnClickListener(operatorListener);
         buttonMultiply.setOnClickListener(operatorListener);
         buttonDivision.setOnClickListener(operatorListener);
+        equalsButton.setOnClickListener(equalsListener);
 
+        //OnLongPressListener for equals button
         buttonClear.setOnLongClickListener(clearButtonLongPress);
 
-        equalsButton.setOnClickListener(equalsListener);
+
     }
 
     //Checks if the last character in displayExpression is an operator
@@ -220,19 +232,25 @@ public class MainActivity extends AppCompatActivity {
 
     public void addToArray(String element) {
         String appendText;
+        //checks if expressionArray is empty or not, If it is, it is initialized.
         if(expressionArray.size() == 0){
             expressionArrayLength = 0;
             expressionArray.add(expressionArrayLength,"");
         }
+        //checks if passed element is an operator or not
         if(operatorCheck(element.charAt(0))){
-            if(expressionArray.get(expressionArrayLength).length() > 0)
-                if(operatorCheck(expressionArray.get(expressionArrayLength).charAt(0)))
-                    expressionArray.set(expressionArrayLength,element);
+            //Checks that last expressionArray has length greater than 0
+            //if it is, then checks if the last element is an operator or not.
+            if (expressionArray.get(expressionArrayLength).length() > 0 && operatorCheck(expressionArray.get(expressionArrayLength).charAt(0)))
+                    //if yes, then replaces the previous operator
+                    expressionArray.set(expressionArrayLength, element);
+            //if not then new element is added to the expressionArray.
             else {
                 expressionArrayLength++;
                 expressionArray.add(expressionArrayLength, element);
             }
         }
+        //Adds non-operator terms to expressionArray
         else {
             if(expressionArray.get(expressionArrayLength).length() > 0){
                 if(operatorCheck(expressionArray.get(expressionArrayLength).charAt(0))) {
@@ -246,23 +264,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void popElement(){
-        String appendText;
-        appendText = expressionArray.get(expressionArrayLength);
-        if(appendText.length() > 0) {
-            appendText = appendText.substring(0, appendText.length() - 1);
-            expressionArray.set(expressionArrayLength,appendText);
-            if(appendText.length() < 1) {
-                expressionArray.remove(expressionArrayLength);
-                expressionArrayLength--;
-            }
-        }
-    }
-
     /*public void showStack() {
         String appendText = "";
-        for(int i = 0; i < stack.size(); i++) {
-            appendText += stack.get(i);
+        for(int i = 0; i < expressionArray.size(); i++) {
+            appendText += expressionArray.get(i);
         }
         displayAnswer.setText(appendText);
     }*/
@@ -377,5 +382,16 @@ public class MainActivity extends AppCompatActivity {
         temp = "";
         temp += answer;
         displayAnswer.setText(temp);
+     }
+
+     public void convertToArrayList() {
+        clearStack();
+         String convertToString = "";
+         char[] newArray = displayExpression.getText().toString().toCharArray();
+         for(int i=0; i < newArray.length; i++){
+             convertToString += newArray[i];
+             addToArray(convertToString);
+             convertToString = "";
+         }
      }
 }
