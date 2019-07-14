@@ -33,36 +33,23 @@ public class MainActivity extends AppCompatActivity {
     private Button equalsButton;
     private String newText;
     private TextView displayAnswer;
-
-    private int numberOfDecimals = 0;
-    private int expressionArrayLength = 0;
-
-    private ArrayList<Boolean> decimalUsed = new ArrayList<>();
-    private ArrayList<String> expressionArray = new ArrayList<>();
-    private ArrayList<String> stack = new ArrayList<>();
-    private ArrayList<Character> operatorStack = new ArrayList<>();
-    private ArrayList<Double> solveStack = new ArrayList<>();
-
-    private char lastCharacter;
     private Vibrator hapticFeedback;
 
-
+    private char lastCharacter;
+    private int numberOfDecimals = 0;
+    private ArrayList<Boolean> decimalUsed = new ArrayList<>();
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 
-        initializeViewObjects();
+        initializeViews();
         setUpOnClickListeners();
-
-        //Forces keyboard not to show up automatically
-        displayExpression.setShowSoftInputOnFocus(false);
     }
 
-
-    //Initialize all the view objects
-    public void initializeViewObjects(){
+    void initializeViews(){
         //Points various view subtypes to their objects
         displayExpression = findViewById(R.id.displayExpression);
         button0 = findViewById(R.id.button0);
@@ -83,8 +70,9 @@ public class MainActivity extends AppCompatActivity {
         buttonClear = findViewById(R.id.buttonClear);
         equalsButton = findViewById(R.id.equalsButton);
         displayAnswer = findViewById(R.id.displayAnswer);
-        decimalUsed.add(numberOfDecimals,false);
         hapticFeedback = (Vibrator)this.getSystemService(VIBRATOR_SERVICE);
+        decimalUsed.add(numberOfDecimals,false);
+        displayExpression.setShowSoftInputOnFocus(false);
     }
 
     //Sets up OnClickListeners for buttons
@@ -97,10 +85,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Button numButton = (Button)v;
                 newText = displayExpression.getText().toString();
-
                 if(newText.length()>0)
                     lastCharacter = newText.charAt(newText.length() - 1); //gets last character from displayExpression
-
                 if(numButton.getId() == R.id.buttonDot) {
                     if (decimalUsed.get(numberOfDecimals))
                         return;
@@ -109,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
                         //addToArray("0");
                     }
                 }
-
                 String number = numButton.getText().toString(); //Gets text from button
                 //addToArray(number);
                 displayExpression.append(number);//Adds the number to the displayExpression Text.
@@ -134,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                     //Check's if the button pressed is Clear Button
                     if (operator.getId() == R.id.buttonClear) {
                         //if(expressionArray.isEmpty())
-                            //convertToArrayList();
+                        //convertToArrayList();
                         newText = newText.substring(0, newText.length() - 1); //creates a new sub-string
                         displayExpression.setText(newText); //sets text
                         if(operatorCheck(lastCharacter)) {
@@ -172,14 +157,14 @@ public class MainActivity extends AppCompatActivity {
         View.OnLongClickListener clearButtonLongPress = new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                convertToArrayList();
+                //convertToArrayList();
                 displayExpression.setText(""); //Clears the mathematical expression
                 decimalUsed.clear(); //Clears the decimal array
                 numberOfDecimals = 0; //sets number of decimals used to 0
                 decimalUsed.add(numberOfDecimals,false); // initializes the Decimal Used ArrayList
                 hapticFeedback.vibrate(1); //Gives Haptic feedback on Long Press
                 displayAnswer.setText(""); //Resets displayAnswer TextView
-                clearStack(); // Clears the stack
+                //clearStack(); // Clears the stack
                 return false;
             }
         };
@@ -188,8 +173,8 @@ public class MainActivity extends AppCompatActivity {
         View.OnClickListener equalsListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                convertToArrayList();
-                convertToStack();
+                //convertToArrayList();
+                //convertToStack();
             }
         };
 
@@ -216,8 +201,6 @@ public class MainActivity extends AppCompatActivity {
 
         //OnLongPressListener for equals button
         buttonClear.setOnLongClickListener(clearButtonLongPress);
-
-
     }
 
     //Checks if the last character in displayExpression is an operator
@@ -229,169 +212,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return false; //returns false if operator isn't found
     }
-
-    public void addToArray(String element) {
-        String appendText;
-        //checks if expressionArray is empty or not, If it is, it is initialized.
-        if(expressionArray.size() == 0){
-            expressionArrayLength = 0;
-            expressionArray.add(expressionArrayLength,"");
-        }
-        //checks if passed element is an operator or not
-        if(operatorCheck(element.charAt(0))){
-            //Checks that last expressionArray has length greater than 0
-            //if it is, then checks if the last element is an operator or not.
-            if (expressionArray.get(expressionArrayLength).length() > 0 && operatorCheck(expressionArray.get(expressionArrayLength).charAt(0)))
-                    //if yes, then replaces the previous operator
-                    expressionArray.set(expressionArrayLength, element);
-            //if not then new element is added to the expressionArray.
-            else {
-                expressionArrayLength++;
-                expressionArray.add(expressionArrayLength, element);
-            }
-        }
-        //Adds non-operator terms to expressionArray
-        else {
-            if(expressionArray.get(expressionArrayLength).length() > 0){
-                if(operatorCheck(expressionArray.get(expressionArrayLength).charAt(0))) {
-                    expressionArrayLength++;
-                    expressionArray.add(expressionArrayLength, "");
-                }
-            }
-            appendText = expressionArray.get(expressionArrayLength);
-            appendText += element;
-            expressionArray.set(expressionArrayLength,appendText);
-        }
-    }
-
-    /*public void showStack() {
-        String appendText = "";
-        for(int i = 0; i < expressionArray.size(); i++) {
-            appendText += expressionArray.get(i);
-        }
-        displayAnswer.setText(appendText);
-    }*/
-
-    public void clearStack(){
-        expressionArray.clear();
-        expressionArrayLength = 0;
-    }
-
-    public void convertToStack() {
-        String switchToString = "";
-        stack.clear();
-        if(expressionArray.isEmpty())
-            return;
-        System.out.print(expressionArray.size());
-        for(int i = 0; i < expressionArray.size(); i++){
-            if(operatorCheck(expressionArray.get(expressionArray.size()-1).charAt(0)))
-                return;
-            if(expressionArray.get(i) == "(" || operatorCheck(expressionArray.get(i).charAt(0)))
-                addToOperatorStack(expressionArray.get(i).charAt(0));
-            else
-                addToExpressionStack(expressionArray.get(i));
-        }
-        while (!operatorStack.isEmpty()){
-            switchToString += operatorStack.get(operatorStack.size()-1);
-            addToExpressionStack(switchToString);
-            switchToString = "";
-            operatorStack.remove(operatorStack.get(operatorStack.size()-1));
-        }
-        calculate();
-    }
-
-    public void addToOperatorStack(char operator) {
-        char lastOperator = '\0';
-        String switchToString = "";
-        if(!operatorStack.isEmpty()) {
-            lastOperator = operatorStack.get(operatorStack.size() - 1);
-            switchToString += lastOperator;
-        }
-        if(operatorStack.isEmpty() || operator == '(' || operatorStack.get(operatorStack.size() - 1) == '(')
-            operatorStack.add(operator);
-        else if(operator == '/') {
-            if(lastOperator == '*' || lastOperator == '/'){
-                addToExpressionStack(switchToString);
-                operatorStack.remove(operatorStack.size()-1);
-                addToOperatorStack(operator);
-            }
-            else {
-                operatorStack.add(operator);
-            }
-        }
-        else if(operator == '*'){
-            if(lastOperator == '*' || lastOperator == '/') {
-                addToExpressionStack(switchToString);
-                operatorStack.remove(operatorStack.size()-1);
-                addToOperatorStack(operator);
-            }
-            else {
-                operatorStack.add(operator);
-            }
-        }
-        else if(operator == '+'){
-            if(operatorCheck(lastOperator)) {
-                addToExpressionStack(switchToString);
-                operatorStack.remove(operatorStack.size()-1);
-                addToOperatorStack(operator);
-            }
-            else
-                operatorStack.add(operator);
-        }
-        else if(operator == '-'){
-            if(operatorCheck(lastOperator)) {
-                addToExpressionStack(switchToString);
-                operatorStack.remove(operatorStack.size()-1);
-                addToOperatorStack(operator);
-            }
-            else
-                operatorStack.add(operator);
-        }
-    }
-    public void addToExpressionStack(String element){
-        stack.add(element);
-    }
-     public void calculate(){
-        double answer = 0;
-        String temp;
-        while(!stack.isEmpty()) {
-            temp = stack.get(0);
-            if(!operatorCheck(temp.charAt(0)))
-                solveStack.add(Double.parseDouble(stack.get(0)));
-            else
-            {
-                switch(temp){
-                    case "+":
-                        answer = solveStack.get(solveStack.size()-2) + solveStack.get(solveStack.size()-1);
-                        break;
-                    case "-":
-                        answer = solveStack.get(solveStack.size()-2) - solveStack.get(solveStack.size()-1);
-                        break;
-                    case "*":
-                        answer = solveStack.get(solveStack.size()-2) * solveStack.get(solveStack.size()-1);
-                        break;
-                    case "/":
-                        answer = solveStack.get(solveStack.size()-2) / solveStack.get(solveStack.size()-1);
-                        break;
-                }
-                solveStack.remove(solveStack.size()-1);
-                solveStack.set(solveStack.size()-1,answer);
-            }
-            stack.remove(0);
-        }
-        temp = "";
-        temp += answer;
-        displayAnswer.setText(temp);
-     }
-
-     public void convertToArrayList() {
-        clearStack();
-         String convertToString = "";
-         char[] newArray = displayExpression.getText().toString().toCharArray();
-         for(int i=0; i < newArray.length; i++){
-             convertToString += newArray[i];
-             addToArray(convertToString);
-             convertToString = "";
-         }
-     }
 }
