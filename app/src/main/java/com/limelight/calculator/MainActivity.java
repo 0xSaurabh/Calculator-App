@@ -3,7 +3,6 @@ package com.limelight.calculator;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatDelegate;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,11 +30,11 @@ public class MainActivity extends AppCompatActivity {
     private Button buttonDivision;
     private Button buttonClear;
     private Button equalsButton;
-    private String newText;
     private TextView displayAnswer;
     private Vibrator hapticFeedback;
 
     private char lastCharacter;
+    private String newText;
     private int numberOfDecimals = 0;
     private ArrayList<Boolean> decimalUsed = new ArrayList<>();
     
@@ -92,11 +91,9 @@ public class MainActivity extends AppCompatActivity {
                         return;
                     else if ((operatorCheck(lastCharacter) || newText.length() < 1)) {
                         displayExpression.append("0");
-                        //addToArray("0");
                     }
                 }
                 String number = numButton.getText().toString(); //Gets text from button
-                //addToArray(number);
                 displayExpression.append(number);//Adds the number to the displayExpression Text.
                 if(numButton.getId() == R.id.buttonDot)
                     decimalUsed.add(numberOfDecimals,true);
@@ -139,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
                         } else{
                             if(lastCharacter == '.') {
                                 displayExpression.append("0");
-                                //addToArray("0");
                             }
                             displayExpression.append(operators); //Adds the operator by appending text
                         }
@@ -173,8 +169,10 @@ public class MainActivity extends AppCompatActivity {
         View.OnClickListener equalsListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //convertToArrayList();
-                //convertToStack();
+                newText = displayExpression.getText().toString();
+                calculations newCalculation = new calculations();
+                newCalculation.createEquationCharacterArray(newText);
+                displayAnswer.setText(newCalculation.createPostfix());
             }
         };
 
