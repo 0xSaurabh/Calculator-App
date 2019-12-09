@@ -8,18 +8,75 @@
     tools:context=".MainActivity">
 
     <Button
+        android:id="@+id/buttonDivision"
+        style="@android:style/Widget.DeviceDefault.Button.Borderless"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/ripple"
+        android:fontFamily="@font/roboto"
+        android:text="/"
+        android:textColor="@color/colorPrimary"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@+id/buttonPower"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/buttonPower" />
+
+    <Button
+        android:id="@+id/openBracket"
+        style="@android:style/Widget.DeviceDefault.Button.Borderless"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/ripple"
+        android:fontFamily="@font/roboto"
+        android:text="("
+        android:textColor="@color/colorPrimary"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/button7"
+        app:layout_constraintEnd_toStartOf="@+id/closeBracket"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/closeBracket"
+        style="@android:style/Widget.DeviceDefault.Button.Borderless"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/ripple"
+        android:fontFamily="@font/roboto"
+        android:text=")"
+        android:textColor="@color/colorPrimary"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@+id/openBracket"
+        app:layout_constraintEnd_toStartOf="@+id/buttonPower"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/openBracket" />
+
+    <Button
         android:id="@+id/equalsButton"
         style="@android:style/Widget.DeviceDefault.Button.Borderless"
-        android:layout_width="0dp"
-        android:layout_height="54dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/ripple_equals"
         android:fontFamily="@font/roboto"
         android:text="="
-        android:textColor="#ffffff"
-        android:textSize="40sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@android:color/white"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@+id/buttonClear"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/buttonClear" />
 
     <Button
         android:id="@+id/buttonDot"
@@ -34,7 +91,7 @@
         android:textColor="@color/textColor"
         android:textSize="22sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/equalsButton"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/button0"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
@@ -45,14 +102,14 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/ripple"
+        android:background="@drawable/ripple_effect_clear"
         android:fontFamily="@font/roboto"
         android:text="ac"
         android:textAllCaps="false"
-        android:textColor="@color/textColor"
+        android:textColor="@color/red"
         android:textSize="22sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/button0"
-        app:layout_constraintEnd_toStartOf="@+id/buttonPlus"
+        app:layout_constraintEnd_toStartOf="@+id/equalsButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button0" />
 
@@ -117,7 +174,7 @@
         android:textColor="@color/textColor"
         android:textSize="22sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/button2"
-        app:layout_constraintEnd_toStartOf="@+id/buttonMinus"
+        app:layout_constraintEnd_toStartOf="@+id/buttonPlus"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button2" />
 
@@ -166,7 +223,7 @@
         android:textColor="@color/textColor"
         android:textSize="22sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/button5"
-        app:layout_constraintEnd_toStartOf="@+id/buttonMultiplication"
+        app:layout_constraintEnd_toStartOf="@+id/buttonMinus"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button5" />
 
@@ -215,7 +272,7 @@
         android:textColor="@color/textColor"
         android:textSize="22sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/button8"
-        app:layout_constraintEnd_toStartOf="@+id/buttonDivision"
+        app:layout_constraintEnd_toStartOf="@+id/buttonMultiplication"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button8" />
 
@@ -232,10 +289,10 @@
         android:textColor="@color/colorPrimary"
         android:textSize="22sp"
         android:textStyle="bold"
-        app:layout_constraintBaseline_toBaselineOf="@+id/buttonClear"
+        app:layout_constraintBaseline_toBaselineOf="@+id/button3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/buttonClear" />
+        app:layout_constraintStart_toEndOf="@+id/button3" />
 
     <Button
         android:id="@+id/buttonMinus"
@@ -250,10 +307,10 @@
         android:textColor="@color/colorPrimary"
         android:textSize="22sp"
         android:textStyle="bold"
-        app:layout_constraintBaseline_toBaselineOf="@+id/button3"
+        app:layout_constraintBaseline_toBaselineOf="@+id/button6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button3" />
+        app:layout_constraintStart_toEndOf="@+id/button6" />
 
     <Button
         android:id="@+id/buttonMultiplication"
@@ -269,48 +326,46 @@
         android:textColor="@color/colorPrimary"
         android:textSize="22sp"
         android:textStyle="bold"
-        app:layout_constraintBaseline_toBaselineOf="@+id/button6"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button6" />
-
-    <Button
-        android:id="@+id/buttonDivision"
-        style="@android:style/Widget.DeviceDefault.Button.Borderless"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/ripple"
-        android:fontFamily="@font/roboto"
-        android:text="/"
-        android:textColor="@color/colorPrimary"
-        android:textSize="22sp"
-        android:textStyle="bold"
         app:layout_constraintBaseline_toBaselineOf="@+id/button9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button9" />
 
+    <Button
+        android:id="@+id/buttonPower"
+        style="@android:style/Widget.DeviceDefault.Button.Borderless"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/ripple"
+        android:fontFamily="@font/roboto"
+        android:text="^"
+        android:textColor="@color/colorPrimary"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@+id/closeBracket"
+        app:layout_constraintEnd_toStartOf="@+id/buttonDivision"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/closeBracket" />
+
     <TextView
         android:id="@+id/displayAnswer"
         android:layout_width="0dp"
         android:layout_height="70dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
         android:fontFamily="@font/roboto"
-        android:paddingLeft="15dp"
+        android:paddingLeft="20dp"
         android:paddingTop="8dp"
-        android:paddingRight="15dp"
+        android:paddingRight="20dp"
         android:singleLine="true"
         android:textAlignment="textEnd"
         android:textColor="@color/textColor"
         android:textSize="36sp"
-        app:layout_constraintBottom_toTopOf="@+id/button7"
+        app:layout_constraintBottom_toTopOf="@+id/openBracket"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/displayExpression"
         tools:text="98" />
@@ -319,26 +374,27 @@
         android:id="@+id/displayExpression"
         android:layout_width="0dp"
         android:layout_height="70dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:background="@null"
         android:focusable="true"
         android:focusableInTouchMode="false"
         android:fontFamily="@font/roboto"
-        android:inputType="text|numberDecimal"
+        android:inputType="text"
         android:paddingLeft="15dp"
-        android:paddingTop="15dp"
         android:paddingRight="15dp"
         android:scrollbars="horizontal"
         android:singleLine="true"
+        android:textAlignment="textEnd"
+        android:textColor="@color/textColor"
         android:textIsSelectable="true"
-        android:textSize="32sp"
+        android:textSize="48sp"
         app:layout_constraintBottom_toTopOf="@+id/displayAnswer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         tools:text="98" />
 
 </android.support.constraint.ConstraintLayout>

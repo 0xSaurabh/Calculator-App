@@ -6,4 +6,7 @@
     <color name="background">#ffffff</color>
     <color name="rippleEffect">#a8abaf</color>
     <color name="textColor">#6A6C6D</color>
+    <color name="red">#DC143C</color>
+    <color name="clearRippleEffect">#FA8072</color>
+    <color name="statusBackground">#000000</color>
 </resources>

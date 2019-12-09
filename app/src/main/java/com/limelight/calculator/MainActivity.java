@@ -3,7 +3,10 @@ package com.limelight.calculator;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -30,8 +33,13 @@ public class MainActivity extends AppCompatActivity {
     private Button buttonDivision;
     private Button buttonClear;
     private Button equalsButton;
+    private Button openBracketButton;
+    private Button closeBracketButton;
+    private Button buttonPercent;
     private TextView displayAnswer;
     private Vibrator hapticFeedback;
+    private calculations newCalculation = new calculations();
+    Animation newAnim, newClearAnim,fadeOut;
 
     private char lastCharacter;
     private String newText;
@@ -43,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-
+        newAnim = AnimationUtils.loadAnimation(this,R.anim.fade);
+        newClearAnim = AnimationUtils.loadAnimation(this,R.anim.clear_anim);
+        fadeOut = AnimationUtils.loadAnimation(this,R.anim.allclear_anim);
         initializeViews();
         setUpOnClickListeners();
     }
@@ -69,14 +79,17 @@ public class MainActivity extends AppCompatActivity {
         buttonClear = findViewById(R.id.buttonClear);
         equalsButton = findViewById(R.id.equalsButton);
         displayAnswer = findViewById(R.id.displayAnswer);
+        openBracketButton = findViewById(R.id.openBracket);
+        closeBracketButton = findViewById(R.id.closeBracket);
+        buttonPercent = findViewById(R.id.buttonPower);
         hapticFeedback = (Vibrator)this.getSystemService(VIBRATOR_SERVICE);
         decimalUsed.add(numberOfDecimals,false);
         displayExpression.setShowSoftInputOnFocus(false);
+        displayExpression.setVerticalScrollBarEnabled(false);
     }
 
     //Sets up OnClickListeners for buttons
     public void setUpOnClickListeners(){
-
         //On Click Listener for Number Buttons and Dot Button
         View.OnClickListener numberListener = new View.OnClickListener() {
             //Overrides onClick method
@@ -97,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 displayExpression.append(number);//Adds the number to the displayExpression Text.
                 if(numButton.getId() == R.id.buttonDot)
                     decimalUsed.add(numberOfDecimals,true);
+                displayExpression.startAnimation(newAnim);
             }
         };
 
@@ -145,6 +159,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                     //Sets cursor to the last of the text
                     displayExpression.setSelection(displayExpression.getText().length());
+                    if (operator.getId() == R.id.buttonClear) {
+                        displayExpression.startAnimation(newClearAnim);
+                    }
+                    else
+                        displayExpression.startAnimation(newAnim);
                 }
             }
         };
@@ -154,14 +173,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onLongClick(View v) {
                 //convertToArrayList();
+                //displayExpression.setClickable(true);
+                //displayExpression.setBackgroundResource(R.drawable.ripple_all_clear);
                 displayExpression.setText(""); //Clears the mathematical expression
                 decimalUsed.clear(); //Clears the decimal array
                 numberOfDecimals = 0; //sets number of decimals used to 0
                 decimalUsed.add(numberOfDecimals,false); // initializes the Decimal Used ArrayList
                 hapticFeedback.vibrate(1); //Gives Haptic feedback on Long Press
                 displayAnswer.setText(""); //Resets displayAnswer TextView
-                //clearStack(); // Clears the stack
-                return false;
+                newCalculation.clear(); // Clears the stack
+                return true;
             }
         };
 
@@ -170,9 +191,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 newText = displayExpression.getText().toString();
-                calculations newCalculation = new calculations();
                 newCalculation.createEquationCharacterArray(newText);
                 displayAnswer.setText(newCalculation.createPostfix());
+                displayAnswer.startAnimation(newAnim);
             }
         };
 
@@ -188,6 +209,8 @@ public class MainActivity extends AppCompatActivity {
         button8.setOnClickListener(numberListener);
         button9.setOnClickListener(numberListener);
         buttonDot.setOnClickListener(numberListener);
+        openBracketButton.setOnClickListener(numberListener);
+        closeBracketButton.setOnClickListener(numberListener);
 
         //OnCLickListeners for Operators and Clear Button
         buttonClear.setOnClickListener(operatorListener);
@@ -196,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
         buttonMultiply.setOnClickListener(operatorListener);
         buttonDivision.setOnClickListener(operatorListener);
         equalsButton.setOnClickListener(equalsListener);
+        buttonPercent.setOnClickListener(operatorListener);
 
         //OnLongPressListener for equals button
         buttonClear.setOnLongClickListener(clearButtonLongPress);
